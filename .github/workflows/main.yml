@@ -13,8 +13,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Shift-left: run the test stage — build fails if pytest fails
+      - name: Run tests (bild time)
+        run: docker build --target tester -t advanced-docker:test .
+
       - name: Build Docker image
         run: docker build -t advanced-docker .
 
-      - name: Docker run
-        run: docker run -d advanced-docker
+      # Scan for vulneribilities
+      - name: Docker Scout Scan
+        uses: docker/scout-action@v1.23.1
+        with:
+          command: cves
+          image: advanced-docker:latest
+          only-severities: critical,high
+          sarif-file: scout-report.sarif
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-scout-findings
+          path: scout-report.sarif
+
+      # Virfy non-root
+      - name: Verify container runs as non-root
+        run: |
+          docker run --rm advanced-docker whoami | tee whoami.txt
+          if grep -q "^root$" whoami.txt; then
+            echo "Container is running as root!"
+            exit 1
+          fi
+
+      

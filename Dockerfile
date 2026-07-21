@@ -13,6 +13,16 @@ COPY requirements.txt .
 
 RUN pip install --user --no-cache-dir -r requirements.txt
 
+
+# --- STAGE 1b: Test Stage (Shift-Left Testing) ---
+FROM builder AS tester
+
+WORKDIR /build
+COPY . .
+RUN pip install --user --no-cache-dir pytest && \
+    python -m pytest --maxfail=1 --disable-warnings -q
+
+
 # --- STAGE 2: Runtime Stage ---
 FROM python:3.11-slim as runner
 
