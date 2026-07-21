@@ -24,7 +24,7 @@ RUN pip install --user --no-cache-dir pytest && \
 
 
 # --- STAGE 2: Runtime Stage ---
-FROM python:3.11-slim as runner
+FROM python:3.11-slim AS runner
 
 #Define non-root user
 RUN groupadd -g 10001 appgroup && \

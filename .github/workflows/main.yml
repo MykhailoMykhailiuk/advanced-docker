@@ -35,7 +35,7 @@ jobs:
         with:
           name: docker-scout-findings
           path: scout-report.sarif
-
+  
       # Virfy non-root
       - name: Verify container runs as non-root
         run: |

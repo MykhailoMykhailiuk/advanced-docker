@@ -7,4 +7,9 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"hello docker")
 
-HTTPServer(("0.0.0.0", 8000), Handler).serve_forever()
+def run(host="0.0.0.0", port=8000):
+    server = HTTPServer((host, port), Handler)
+    server.serve_forever()
+
+if __name__ == "__main__":
+    run()
