@@ -15,3 +15,6 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t advanced-docker .
+
+      - name: Docker run
+        run: docker run -d advanced-docker
