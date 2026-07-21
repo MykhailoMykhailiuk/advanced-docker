@@ -21,22 +21,21 @@ jobs:
         run: docker build -t advanced-docker .
 
       # Scan for vulneribilities
-      - name: Docker Scout Scan
-        uses: docker/scout-action@v1.23.1
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@0.24.0
         with:
-          dockerhub-user: ${{ secrets.REPO_USER }}
-          dockerhub-password: ${{ secrets.REPO_PWD }}
-          command: cves
-          image: advanced-docker:latest
-          only-severities: critical,high
-          sarif-file: scout-report.sarif
-
-      - name: Upload Artifact
+          image-ref: advanced-docker:latest
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          format: sarif
+          output: trivy-report.sarif
+      
+      - name: Upload Trivy Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: docker-scout-findings
-          path: scout-report.sarif
+          name: trivy-findings
+          path: trivy-report.sarif
   
       # Virfy non-root
       - name: Verify container runs as non-root
