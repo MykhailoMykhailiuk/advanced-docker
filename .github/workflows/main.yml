@@ -20,16 +20,12 @@ jobs:
       - name: Build Docker image
         run: docker build -t advanced-docker .
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.REPO_USER }}
-          password: ${{ secrets.REPO_PWD }}
-
       # Scan for vulneribilities
       - name: Docker Scout Scan
         uses: docker/scout-action@v1.23.1
         with:
+          username: ${{ secrets.REPO_USER }}
+          password: ${{ secrets.REPO_PWD }}
           command: cves
           image: advanced-docker:latest
           only-severities: critical,high
