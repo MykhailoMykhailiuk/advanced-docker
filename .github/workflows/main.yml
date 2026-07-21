@@ -26,7 +26,7 @@ jobs:
         with:
           image-ref: advanced-docker:latest
           severity: HIGH,CRITICAL
-          # exit-code: '1'
+          exit-code: '1'
           format: sarif
           output: trivy-report.sarif
       
